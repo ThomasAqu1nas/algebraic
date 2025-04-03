@@ -46,38 +46,6 @@ It is heavily inspired by how cryptography expresses itself through group theory
 
 ---
 
-## 🛠 Example
-
-```rust
-use algebraic::{
-    field::Field,
-    group::Group,
-    wrappers::{AdditiveElement, MultiplicativeElement},
-    operation::{Additive, Multiplicative},
-};
-
-#[derive(Clone, Copy, PartialEq, Eq, Debug)]
-struct F7(u8);
-
-impl std::ops::Add for &F7 {
-    type Output = F7;
-    fn add(self, rhs: Self) -> F7 {
-        F7((self.0 + rhs.0) % 7)
-    }
-}
-
-impl std::ops::Mul for &F7 {
-    type Output = F7;
-    fn mul(self, rhs: Self) -> F7 {
-        F7((self.0 * rhs.0) % 7)
-    }
-}
-```
-
-Further, you can implement group operations and field structure using additive and multiplicative wrappers.
-
----
-
 ## 📁 Structure
 
 - `operation.rs` — additive/multiplicative binary operations
