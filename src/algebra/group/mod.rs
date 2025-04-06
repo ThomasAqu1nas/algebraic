@@ -1,28 +1,25 @@
-use std::ops::Add;
-
 use element::{ElementFinite, GroupOps};
 use primitive_types::U256;
 
 use crate::helpers::{gcd, U256Range};
 
-use super::{operations::{Additive, BinaryOperation, BinaryOperationType}, properties::{Commutative, Finite, Identity}};
+use super::{operations::{Additive, BinaryOperation, BinaryOperationType}, properties::{Commutative, Finite, Identity}, AlgebraicStructure};
 
 pub mod element;
 pub mod extension;
+pub mod impls;
 
-pub trait Group<O>: 
+pub trait Group<O: BinaryOperationType>: 
     std::fmt::Debug
     + Sized
-    + Identity<Self::Element>
-where O:
-    BinaryOperationType<Self::Element>
-{
-    type Element: GroupOps<O, Self>;
-}
+    + AlgebraicStructure
+    + Identity<Self>
+where 
+    Self::Element: GroupOps<O, Self>
+{}
 
-pub trait FiniteGroup<O>: Group<O> + Finite 
+pub trait FiniteGroup<O: BinaryOperationType>: Group<O> + Finite 
     where Self::Element: GroupOps<O, Self> + ElementFinite<O, Self>,
-    O: BinaryOperationType<Self::Element>
 {
     fn element_order(&self, e: &Self::Element) -> U256
     where
@@ -32,18 +29,14 @@ pub trait FiniteGroup<O>: Group<O> + Finite
     }
 }
 
-pub trait AbelianGroup: Group<Additive>
+pub trait AbelianGroup<O: BinaryOperationType>: Group<O>
 where 
-    Self::Element: GroupOps<Additive, Self> + Commutative<Self::Element>,
-    <Self as Group<Additive>>::Element: Add<Output = <Self as Group<Additive>>::Element>,
-    for<'a> &'a <Self as Group<Additive>>::Element: Add<Output = <Self as Group<Additive>>::Element>
+    Self::Element: GroupOps<O, Self> + Commutative<Self>,
 {}
 
-pub trait CyclingGroup: FiniteGroup<Additive> + AbelianGroup
+pub trait CyclingGroup<O: BinaryOperationType>: FiniteGroup<O> + AbelianGroup<O>
 where 
-    Self::Element: GroupOps<Additive, Self> + ElementFinite<Additive, Self> + Commutative<Self::Element>,
-    <Self as Group<Additive>>::Element: Add<Output = <Self as Group<Additive>>::Element>,
-    for<'a> &'a <Self as Group<Additive>>::Element: Add<Output = <Self as Group<Additive>>::Element>
+    Self::Element: GroupOps<O, Self> + ElementFinite<O, Self> + Commutative<Self>,
 {
     fn generator(&self) -> Self::Element;
 
@@ -55,9 +48,9 @@ where
 
         for k in U256Range::new(U256::one(), order) {
             if gcd(k, order) == U256::one() {
-                let mut acc = Self::identity();
+                let mut acc: Self::Element = Self::identity();
                 for _ in U256Range::new(U256::zero(), k) {
-                    acc = <Self::Element as BinaryOperation<Self::Element>>::op(&acc, &generator); 
+                    acc = Self::Element::op(&acc, &generator); 
                 }
                 result.push(acc);
             }
@@ -67,6 +60,6 @@ where
 
     fn is_generator(&self, elem: &Self::Element) -> bool {
         let order = self.order();
-        <Self::Element as ElementFinite<Additive, Self>>::element_order(self, elem) == order
+        <Self::Element as ElementFinite<O, Self>>::element_order(self, elem) == order
     }
 }

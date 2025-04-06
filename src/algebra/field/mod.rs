@@ -1,78 +1,43 @@
-use std::ops::{Add, Mul};
+use super::{group::{element::GroupOps, AbelianGroup, Group}, operations::{Additive, BinaryOperation, Multiplicative}, properties::{Commutative, Distributive, Finite}, AlgebraicStructure};
 
-use super::{group::Group, operations::{Additive, Multiplicative}, properties::{Commutative, Distributive, Finite}};
+// type AdditiveElement<F> = <F as AlgebraicStructure>::Element;
+// type MultiplicativeElement<F> = <F as AlgebraicStructure>::Element;
+
 
 pub mod element;
-
+pub mod fp_impl;
 pub trait Field: 
-    Group<Additive>
-    + Group<Multiplicative>
+    AbelianGroup<Additive>
+    + AbelianGroup<Multiplicative>
 where 
-    for<'a> &'a <Self as Group<Multiplicative>>::Element: 
-    Mul<Output = <
-        Self as Group<Multiplicative>>::Element
-    > 
-    + Commutative<<Self as Group<Multiplicative>>::Element>
-    + Add<Output = <
-        Self as Group<Multiplicative>>::Element
-    >
-    + Distributive<<Self as Group<Multiplicative>>::Element, Multiplicative, Additive>,
-    //
-    for<'a> &'a <Self as Group<Additive>>::Element: Add<Output = <
-        Self as Group<Additive>>::Element
-    > 
-    + Commutative<<Self as Group<Additive>>::Element>,
-    //
-    <Self as Group<Multiplicative>>::Element: Mul<Output = <
-        Self as Group<Multiplicative>>::Element
-    >
-    + Commutative<<Self as Group<Additive>>::Element>
-    + Add<Output = <
-        Self as Group<Multiplicative>>::Element
-    >
-    + Distributive<<Self as Group<Multiplicative>>::Element, Multiplicative, Additive>,
-    //
-    <Self as Group<Additive>>::Element: Add<Output = <
-        Self as Group<Additive>>::Element
-    >
-    + Commutative<<Self as Group<Additive>>::Element>,
+    Self::Element: GroupOps<Additive, Self>,
+    Self::Element: GroupOps<Multiplicative, Self>,
+    Self::Element: Distributive<
+        Self, 
+        <Self as AbelianGroup<Multiplicative>>::Element,
+        <Self as AbelianGroup<Additive>>::Element
+    >,
+    <Self as AlgebraicStructure>::Element: Commutative<Self>
 {}
 
+// pub trait Field: 
+//     AbelianGroup<Additive>
+//     + AbelianGroup<Multiplicative>
+// where 
+//     Self::Element: GroupOps<Additive, Self>,
+//     Self::Element: GroupOps<Multiplicative, Self>,
+//     Self::Element: Distributive<
+//         Self, 
+//         <Self as AbelianGroup<Multiplicative>>::Element,
+//         <Self as AbelianGroup<Additive>>::Element
+//     >,
+//     <Self as AlgebraicStructure>::Element: Commutative<Self>
+// {}
 
-pub trait FiniteField: 
-    Field 
-    + Finite 
-where 
-    for<'a> &'a <Self as Group<Multiplicative>>::Element: 
-    Mul<Output = <
-        Self as Group<Multiplicative>>::Element
-    > 
-    + Commutative<<Self as Group<Multiplicative>>::Element>
-    + Add<Output = <
-        Self as Group<Multiplicative>>::Element
-    >
-    + Distributive<<Self as Group<Multiplicative>>::Element, Multiplicative, Additive>
-    + Finite,
-    //
-    for<'a> &'a <Self as Group<Additive>>::Element: Add<Output = <
-        Self as Group<Additive>>::Element
-    > 
-    + Commutative<<Self as Group<Additive>>::Element>
-    + Finite,
-    //
-    <Self as Group<Multiplicative>>::Element: Mul<Output = <
-        Self as Group<Multiplicative>>::Element
-    >
-    + Commutative<<Self as Group<Additive>>::Element>
-    + Add<Output = <
-        Self as Group<Multiplicative>>::Element
-    >
-    + Distributive<<Self as Group<Multiplicative>>::Element, Multiplicative, Additive>
-    + Finite,
-    //
-    <Self as Group<Additive>>::Element: Add<Output = <
-        Self as Group<Additive>>::Element
-    >
-    + Commutative<<Self as Group<Additive>>::Element>
-    + Finite,
-{}
+// pub trait FiniteField: 
+//     Field 
+//     + Finite 
+// where 
+//     Self::Element: GroupOps<Additive, Self> + Finite,
+//     Self::Element: GroupOps<Multiplicative, Self> + Finite
+// {}

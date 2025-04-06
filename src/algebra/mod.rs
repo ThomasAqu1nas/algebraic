@@ -1,12 +1,20 @@
+use operations::{BinaryOperation, BinaryOperationType};
+use primitive_types::U256;
+
 pub mod group;
 pub mod elliptic_curve;
 pub mod jacobian;
 pub mod field;
 pub mod properties;
 pub mod operations;
+pub mod monoid;
 
 
+pub trait AlgebraicStructure: Sized {
+    type Element: BinaryOperation<Self> + PartialEq;
+}
 
-
-
-
+pub trait ElementFinite<O: BinaryOperationType, S: AlgebraicStructure> 
+{
+    fn element_order(g: &S, element: &S::Element) -> U256;
+}
