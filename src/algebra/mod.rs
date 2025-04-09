@@ -1,5 +1,5 @@
 
-use operations::{Additive, BinaryOperation, BinaryOperationType, Multiplicative};
+use operations::{BinaryOperation, BinaryOperationType};
 use primitive_types::U256;
 
 pub mod group;

@@ -1,5 +1,3 @@
-use std::f32::consts::E;
-
 use primitive_types::U256;
 
 use super::{operations::{Additive, BinaryOperation, BinaryOperationType, Multiplicative}, AlgebraicStructure};
