@@ -1,12 +1,12 @@
 use super::AlgebraicStructure;
 
-pub trait BinaryOperation<S: AlgebraicStructure> {
-    type BinaryOperationType: BinaryOperationType;
+pub trait BinaryOperation<O: BinaryOperationType, S: AlgebraicStructure<O>> {
     fn op(a: &S::Element, b: &S::Element) -> S::Element;
 }
 
 pub struct Additive;
 pub struct Multiplicative;
+pub struct Complex;
 
 pub trait BinaryOperationType {}
 

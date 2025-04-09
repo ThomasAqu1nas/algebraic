@@ -6,7 +6,7 @@ use super::{element::GroupOps, Group};
 
 pub trait Power<O: BinaryOperationType, G: Group<O>> 
 where 
-    <G as AlgebraicStructure>::Element: GroupOps<O, G>
+    <G as AlgebraicStructure<O>>::Element: GroupOps<O, G>
 {
     fn pow(element: &G::Element, exp: U256) -> G::Element;
 }

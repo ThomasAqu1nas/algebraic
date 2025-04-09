@@ -14,27 +14,25 @@ use crate::algebra::{
 };
 
 
-impl AlgebraicStructure for U256 {
+impl AlgebraicStructure<Additive> for U256 {
     type Element = U256;
 }
 
 impl Monoid<Additive> for U256 {}
 impl MonoidOps<Additive, U256> for U256 {}
 
-impl Associative<U256> for U256 {}
+impl Associative<Additive, U256> for U256 {}
 
-impl BinaryOperation<U256> for U256 {
-    type BinaryOperationType = Additive;
-
+impl BinaryOperation<Additive, U256> for U256 {
     fn op(
-        a: &<U256 as AlgebraicStructure>::Element, 
-        b: &<U256 as AlgebraicStructure>::Element
-    ) -> <U256 as AlgebraicStructure>::Element {
+        a: &<U256 as AlgebraicStructure<Additive>>::Element, 
+        b: &<U256 as AlgebraicStructure<Additive>>::Element
+    ) -> <U256 as AlgebraicStructure<Additive>>::Element {
         a + b
     }
 }
 
-impl Identity<U256> for U256 {
+impl Identity<Additive, U256> for U256 {
     fn identity() -> U256 {
         U256::zero()
     }

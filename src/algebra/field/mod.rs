@@ -1,43 +1,40 @@
-use super::{group::{element::GroupOps, AbelianGroup, Group}, operations::{Additive, BinaryOperation, Multiplicative}, properties::{Commutative, Distributive, Finite}, AlgebraicStructure};
+use super::{group::{element::GroupOps, AbelianGroup}, operations::{Additive, BinaryOperation, Multiplicative}, properties::{Commutative, Distributive, Finite}, AlgebraicStructure};
 
 // type AdditiveElement<F> = <F as AlgebraicStructure>::Element;
 // type MultiplicativeElement<F> = <F as AlgebraicStructure>::Element;
 
 
 pub mod element;
-pub mod fp_impl;
-pub trait Field: 
+pub mod fp_impls;
+
+pub trait Field<T>: 
     AbelianGroup<Additive>
     + AbelianGroup<Multiplicative>
-where 
-    Self::Element: GroupOps<Additive, Self>,
-    Self::Element: GroupOps<Multiplicative, Self>,
-    Self::Element: Distributive<
-        Self, 
-        <Self as AbelianGroup<Multiplicative>>::Element,
-        <Self as AbelianGroup<Additive>>::Element
-    >,
-    <Self as AlgebraicStructure>::Element: Commutative<Self>
+    + AlgebraicStructure<Additive, Element = T>
+    + AlgebraicStructure<Multiplicative, Element = T>
+where
+    T: PartialEq
+       + BinaryOperation<Additive, Self>
+       + BinaryOperation<Multiplicative, Self>
+       + GroupOps<Additive, Self>
+       + GroupOps<Multiplicative, Self>
+       + Commutative<Additive, Self>
+       + Commutative<Multiplicative, Self>
+       + Distributive<Self, T>,
 {}
 
-// pub trait Field: 
-//     AbelianGroup<Additive>
-//     + AbelianGroup<Multiplicative>
-// where 
-//     Self::Element: GroupOps<Additive, Self>,
-//     Self::Element: GroupOps<Multiplicative, Self>,
-//     Self::Element: Distributive<
-//         Self, 
-//         <Self as AbelianGroup<Multiplicative>>::Element,
-//         <Self as AbelianGroup<Additive>>::Element
-//     >,
-//     <Self as AlgebraicStructure>::Element: Commutative<Self>
-// {}
 
-// pub trait FiniteField: 
-//     Field 
-//     + Finite 
-// where 
-//     Self::Element: GroupOps<Additive, Self> + Finite,
-//     Self::Element: GroupOps<Multiplicative, Self> + Finite
-// {}
+pub trait FiniteField<T>: 
+    Field<T> 
+    + Finite 
+where 
+    T: PartialEq
+        + BinaryOperation<Additive, Self>
+        + BinaryOperation<Multiplicative, Self>
+        + GroupOps<Additive, Self>
+        + GroupOps<Multiplicative, Self>
+        + Commutative<Additive, Self>
+        + Commutative<Multiplicative, Self>
+        + Distributive<Self, T>
+        + Finite,
+{}

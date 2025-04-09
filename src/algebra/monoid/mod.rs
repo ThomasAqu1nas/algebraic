@@ -8,8 +8,8 @@ pub mod impls;
 pub trait Monoid<O: BinaryOperationType>: 
     std::fmt::Debug
     + Sized
-    + AlgebraicStructure
-    + Identity<Self>
+    + AlgebraicStructure<O>
+    + Identity<O, Self>
 where 
     Self::Element: MonoidOps<O, Self>
 {}

@@ -14,9 +14,9 @@ where
 pub trait GroupOps<O: BinaryOperationType, G: Group<O>>:
     Sized
     + PartialEq
-    + BinaryOperation<G>
-    + Associative<G>
-    + Invertible<G>
+    + BinaryOperation<O, G>
+    + Associative<O, G>
+    + Invertible<O, G>
 where 
     G::Element: GroupOps<O, G>
 {}

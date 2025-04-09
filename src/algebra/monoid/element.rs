@@ -11,9 +11,9 @@ use crate::algebra::{
 pub trait MonoidOps<O: BinaryOperationType, M: Monoid<O>>:
     Sized
     + PartialEq
-    + AlgebraicStructure
-    + BinaryOperation<Self>
-    + Associative<Self>
+    + AlgebraicStructure<O>
+    + BinaryOperation<O, Self>
+    + Associative<O, Self>
 where M::Element: MonoidOps<O, M>
 {}
 

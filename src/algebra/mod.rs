@@ -1,4 +1,5 @@
-use operations::{BinaryOperation, BinaryOperationType};
+
+use operations::{Additive, BinaryOperation, BinaryOperationType, Multiplicative};
 use primitive_types::U256;
 
 pub mod group;
@@ -10,11 +11,11 @@ pub mod operations;
 pub mod monoid;
 
 
-pub trait AlgebraicStructure: Sized {
-    type Element: BinaryOperation<Self> + PartialEq;
+pub trait AlgebraicStructure<O: BinaryOperationType>: Sized {
+    type Element: BinaryOperation<O, Self> + PartialEq;
 }
 
-pub trait ElementFinite<O: BinaryOperationType, S: AlgebraicStructure> 
+pub trait ElementFinite<O: BinaryOperationType, S: AlgebraicStructure<O>> 
 {
     fn element_order(g: &S, element: &S::Element) -> U256;
 }
