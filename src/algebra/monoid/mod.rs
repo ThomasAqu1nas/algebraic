@@ -1,6 +1,6 @@
 use element::MonoidOps;
 
-use super::{operations::BinaryOperationType, properties::Identity, AlgebraicStructure};
+use super::{operations::BinaryOperationType, properties::Identity, semigroup::{SemiGroup, SemiGroupOps}, AlgebraicStructure};
 
 pub mod element;
 pub mod impls;
@@ -19,10 +19,9 @@ pub mod impls;
 ///
 /// The trait also requires `Debug` to facilitate logging and debugging.
 pub trait Monoid<O: BinaryOperationType>:
-    std::fmt::Debug
-    + Sized
-    + AlgebraicStructure<O>
+    SemiGroup<O>
     + Identity<O, Self>
 where
+    <Self as AlgebraicStructure<O>>::Element: SemiGroupOps<O, Self>,
     Self::Element: MonoidOps<O, Self>
 {}

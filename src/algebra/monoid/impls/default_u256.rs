@@ -4,13 +4,10 @@ use crate::algebra::{
     monoid::{
         element::MonoidOps, 
         Monoid
-    }, 
-    operations::{
+    }, operations::{
         Additive, 
         BinaryOperation
-    }, 
-    properties::{Associative, Identity}, 
-    AlgebraicStructure
+    }, properties::{Associative, Identity}, semigroup::{SemiGroup, SemiGroupOps}, AlgebraicStructure
 };
 
 
@@ -19,6 +16,8 @@ impl AlgebraicStructure<Additive> for U256 {
 }
 
 impl Monoid<Additive> for U256 {}
+impl SemiGroup<Additive> for U256 {}
+impl SemiGroupOps<Additive, U256> for U256 {}
 impl MonoidOps<Additive, U256> for U256 {}
 
 impl Associative<Additive, U256> for U256 {}

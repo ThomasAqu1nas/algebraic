@@ -5,7 +5,7 @@ use super::{
     AlgebraicStructure,
 };
 
-pub mod element;
+pub mod operation_helpers;
 pub mod fp_impls;
 
 /// A trait representing a mathematical **field** over elements of type `T`.

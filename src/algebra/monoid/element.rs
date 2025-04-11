@@ -1,8 +1,5 @@
 use crate::algebra::{
-    monoid::Monoid, 
-    operations::{BinaryOperation, BinaryOperationType}, 
-    properties::Associative, 
-    AlgebraicStructure
+    monoid::Monoid, operations::{BinaryOperation, BinaryOperationType}, properties::Associative, semigroup::SemiGroupOps, AlgebraicStructure
 };
 
 /// A trait defining **monoid-level operations** for elements of a monoid structure.
@@ -17,11 +14,7 @@ use crate::algebra::{
 ///
 /// This trait enables recursive and generic manipulation of monoid elements.
 pub trait MonoidOps<O: BinaryOperationType, M: Monoid<O>>:
-    Sized
-    + PartialEq
-    + AlgebraicStructure<O>
-    + BinaryOperation<O, Self>
-    + Associative<O, Self>
+    SemiGroupOps<O, M>
 where
     M::Element: MonoidOps<O, M>
 {}
